@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\AsociacionExamenesController;
 use App\Http\Controllers\Api\V1\CorteController;
 use App\Http\Controllers\Api\V1\PlantillamacroscopicaController;
 use App\Http\Controllers\Api\V1\PlantilladiagnosticoController;
+use App\Http\Controllers\Api\V1\EstadopedidoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::delete('asociacionexamenes/eliminarasociacion/{id}', [AsociacionExamenesController::class, 'eliminarasociacion']);
     Route::apiResource('asociacionexamenes', AsociacionExamenesController::class);
     Route::get('informe/generarsecuencial/{year}/{idtipoinforme}', [InformeController::class, 'generarsecuencial']);
+    Route::post('informe/finalizaInforme/{idtipoinforme}', [InformeController::class, 'finalizaInforme']);
     Route::apiResource('informe', InformeController::class);
     Route::get('cortes/generarsecuencial/{letra}/{idinforme}', [CorteController::class, 'generarsecuencial']);
     Route::apiResource('cortes', CorteController::class);

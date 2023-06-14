@@ -71,7 +71,19 @@ class InformeController extends Controller
      */
     public function update(UpdateInformeRequest $request, Informe $informe)
     {
-        //
+        $informe->update($request->all());
+        $informe->muestras()->sync($request['muestrasenviadas']);
+        $informe->cortes()->delete();
+        foreach ($request['cortes'] as $corteItem) {
+            $corte = array(
+                "informe_id" => $corteItem['informe_id'],
+                "codigocorte" => $corteItem['codigocorte'],
+                "letra" => $corteItem['letra'],
+                "consecutivo" => $corteItem['consecutivo'],
+                "descripcion" => $corteItem['descripcion'],
+            );
+            Corte::create($corte);
+        }
     }
 
     /**
@@ -102,5 +114,21 @@ class InformeController extends Controller
         }
         return ['secuencialinforme' => strval($numero)."-".strval($year),
                 'consecutivo' => $numero];
+    }
+
+    /**
+     * Actualizar estado Informe Atendido.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function finalizaInforme( $informeId)
+    {
+        Informe::whereId($informeId)
+            ->update(['idestadopedido'=>2]) ;
+
+        return response()->json([
+            'message' => "Informe updated successfully!",
+            'informe' => $informeId
+        ], 200);
     }
 }

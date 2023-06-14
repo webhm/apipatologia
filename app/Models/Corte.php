@@ -19,6 +19,6 @@ class Corte extends Model
 
     public function informe()
     {
-        return $this->hasOne(Informe::class);
+        return $this->belongsTo(Informe::class);
     }
 }
