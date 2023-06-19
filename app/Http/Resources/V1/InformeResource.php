@@ -27,7 +27,7 @@ class InformeResource extends JsonResource
             'year' => $this->year,
             'idtipoinforme' => $this->idtipoinforme,
             'idestadopedido' => $this->idestadopedido,
-            'estadopedido' => Estadopedido::select('siglas')->whereId($this->idestadopedido)->first(),
+            'estadopedido' => Estadopedido::select('siglas, descripcion')->whereId($this->idestadopedido)->first(),
             'codigoinforme' => $this->codigoinforme,
             'informacionclinica' => $this->informacionclinica,
             'diagnostico' => $this->diagnostico,
