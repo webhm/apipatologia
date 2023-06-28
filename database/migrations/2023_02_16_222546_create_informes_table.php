@@ -37,6 +37,8 @@ return new class extends Migration
             $table->longText('informacionclinica');
             $table->longText('diagnostico');
             $table->longText('macroscopico');
+            $table->longText('resultmicroscopico');
+            $table->longText('dgpresuntivo');
             $table->date('fechadocumento');
             $table->timestamps();
         });

@@ -33,6 +33,8 @@ class InformeResource extends JsonResource
             'diagnostico' => $this->diagnostico,
             'macroscopico' => $this->macroscopico,
             'fechadocumento' => $this->fechadocumento,
+            'dgpresuntivo' => $this->dgpresuntivo,
+            'resultmicroscopico' => $this->resultmicroscopico,
             'muestrasAsociadas' => $this->muestras()->get(),
             'cortes' => $this->cortes()->get()
         ];

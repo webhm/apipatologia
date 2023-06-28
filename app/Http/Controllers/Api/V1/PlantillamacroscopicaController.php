@@ -19,24 +19,25 @@ class PlantillamacroscopicaController extends Controller
     {
         $query = $request->query();
         if (isset($query)) {
-            if (array_key_exists('usuario', $query)) {
-                $plantillas = Plantillamacroscopica::whereNombreusuario($query['usuario'])->get();
+//            if (array_key_exists('usuario', $query)) {
+//                $plantillas = Plantillamacroscopica::whereNombreusuario($query['usuario'])->get();
+                $plantillas = Plantillamacroscopica::all();
                 return response()->json([
                     'status' => true,
                     'plantillas' => $plantillas
                 ]);
-            }
-            else {
-                return response()->json([
-                    'status' => false,
-                    'mensaje' => "falta el usuario"
-                ]);
-            }
+//            }
+//            else {
+//                return response()->json([
+//                    'status' => false,
+//                    'mensaje' => "falta el usuario"
+//                ]);
+//            }
         }
         else {
             return response()->json([
                 'status' => false,
-                'mensaje' => "falta el usuario"
+                'mensaje' => "faltan datos"
             ]);
         }
     }
@@ -61,7 +62,7 @@ class PlantillamacroscopicaController extends Controller
     {
         $plantilla = Plantillamacroscopica::create($request->all());
         return response()->json([
-            'message' => "Product saved successfully!",
+            'message' => "Plantilla saved successfully!",
             'data' => $plantilla
         ], 200);
     }
@@ -99,7 +100,7 @@ class PlantillamacroscopicaController extends Controller
     {
         $plantillamacroscopica->update($request->all());
         return response()->json([
-            'message' => "Product updated successfully!",
+            'message' => "Plantilla updated successfully!",
             'plantilla' => $plantillamacroscopica
         ], 200);
     }
@@ -114,7 +115,7 @@ class PlantillamacroscopicaController extends Controller
     {
         $plantillamacroscopica->delete();
         return response()->json([
-            'message' => "Product deleted successfully!",
+            'message' => "Plantilla deleted successfully!",
         ], 200);
     }
 }

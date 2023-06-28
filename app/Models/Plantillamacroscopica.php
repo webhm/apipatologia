@@ -11,6 +11,11 @@ class Plantillamacroscopica extends Model
     protected $fillable = [
         "nombreplantilla",
         "nombreusuario",
-        "plantilla",
+        "descripcion",
+        "infoclinica",
+        "dgpresuntivo",
+        "resultmacroscopico",
+        "resultmicroscopico",
+        "diagnostico"
     ];
 }

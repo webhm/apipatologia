@@ -29,6 +29,8 @@ class Informe extends Model
         'informacionclinica',
         'diagnostico',
         'macroscopico',
+        "dgpresuntivo",
+        "resultmicroscopico",
         'fechadocumento',
     ];
     public function estadopedido()

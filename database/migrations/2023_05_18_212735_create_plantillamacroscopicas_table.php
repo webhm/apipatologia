@@ -16,8 +16,13 @@ return new class extends Migration
         Schema::create('plantillamacroscopicas', function (Blueprint $table) {
             $table->id();
             $table->string('nombreplantilla');
-            $table->string('nombreusuario');
-            $table->longText('plantilla');
+            $table->string('nombreusuario')->nullable();
+            $table->string('descripcion')->nullable();
+            $table->longText('infoclinica')->nullable();
+            $table->longText('dgpresuntivo')->nullable();
+            $table->longText('resultmacroscopico')->nullable();
+            $table->longText('resultmicroscopico')->nullable();
+            $table->longText('diagnostico')->nullable();
             $table->timestamps();
         });
     }
