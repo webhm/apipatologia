@@ -32,6 +32,8 @@ class Informe extends Model
         "dgpresuntivo",
         "resultmicroscopico",
         'fechadocumento',
+        'iddiagncie10',
+        'DIAGNOSTCIE10'
     ];
     public function estadopedido()
     {

@@ -102,6 +102,18 @@ return [
             'password' => 'P4T0L0G14',
             'charset' => 'AL32UTF8',
             'prefix' => '',
+        ),
+
+        'oracleCID' => array(
+            'driver' => 'oracle',
+            'host' => '172.16.253.60',
+            'port' => '1521',
+            'database' => 'DBAMV',
+            'service_name'   => 'DBAMV',
+            'username' => 'PATOLOGIA',
+            'password' => 'P4T0L0G14',
+            'charset' => 'AL32UTF8',
+            'prefix' => '',
         )
     ],
 

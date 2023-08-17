@@ -8,8 +8,10 @@ use App\Http\Requests\V1\UpdateInformeRequest;
 use App\Http\Resources\V1\InformeCollection;
 use App\Http\Resources\V1\InformeResource;
 use App\Models\Informe;
+use App\Models\Tipoinforme;
 use App\Models\Corte;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InformeController extends Controller
 {
@@ -36,6 +38,16 @@ class InformeController extends Controller
      */
     public function store(StoreInformeRequest $request)
     {
+        $secuencial = Informe::select('secuencial')
+            ->whereYearAndIdtipoinforme($request['year'], $request['idtipoinforme'] )
+            ->orderBy('id', 'desc')
+            ->first();
+        $numero = 1;
+        if ($secuencial) {
+            $numero = $secuencial->secuencial + 1;
+        }
+
+        $request['codigoinforme']  = strval($numero)."-".$request['year'];
         $informe = Informe::create($request->all());
         $informe->muestras()->sync($request['muestrasenviadas']);
         foreach ($request['cortes'] as $corteItem) {
@@ -71,6 +83,16 @@ class InformeController extends Controller
      */
     public function update(UpdateInformeRequest $request, Informe $informe)
     {
+        $secuencial = Informe::select('secuencial')
+            ->whereYearAndIdtipoinforme($request['year'], $request['idtipoinforme'] )
+            ->orderBy('id', 'desc')
+            ->first();
+        $numero = 1;
+        if ($secuencial) {
+            $numero = $secuencial->secuencial + 1;
+        }
+        $request['codigoinforme']  = strval($numero)."-".$request['year'];
+        $request['secuencial']  = strval($numero);
         $informe->update($request->all());
         $informe->muestras()->sync($request['muestrasenviadas']);
         $informe->cortes()->delete();
@@ -98,9 +120,41 @@ class InformeController extends Controller
     }
 
     /**
+     * Obtiene tipos Informe.
+     *
+     * @return array
+     */
+    public function getalltipos()
+    {
+        return  Tipoinforme::select("ID", "DESCRIPCION", "SIGLAS")
+            ->orderBy('ID', 'desc')
+            ->get();
+    }
+
+    /**
+     * Obtiene Diagnosticos CIE.
+     *
+     * @return array
+     */
+    public function getdiagnostiCIE()
+    {
+//        $result = DB::connection('oracleCID')->table("arcpmd")->first();
+//        print_r($result);
+//        return  DB::connection('oracleCID')->table("arcpmd")->first();
+        return  DB::table("CID")->select("CD_CID as id", "DS_CID as DESCRIPCION", "CD_CID as SIGLAS")
+            ->where('CD_SGRU_CID', 'LIKE', 'C%')
+            ->orWhere('CD_SGRU_CID', 'LIKE' ,'D%')
+            ->orderBy('CD_CID')
+            ->get();
+              //  ->limit(100)
+
+
+    }
+
+    /**
      * Obtiene nuevo secuencial.
      *
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function generarsecuencial($year, $idtipoinforme)
     {

@@ -33,6 +33,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::delete('asociacionexamenes/eliminarasociacion/{id}', [AsociacionExamenesController::class, 'eliminarasociacion']);
     Route::apiResource('asociacionexamenes', AsociacionExamenesController::class);
     Route::get('informe/generarsecuencial/{year}/{idtipoinforme}', [InformeController::class, 'generarsecuencial']);
+    Route::get('informe/getalltipos', [InformeController::class, 'getalltipos']);
+    Route::get('informe/getdiagnostiCIE', [InformeController::class, 'getdiagnostiCIE']);
     Route::post('informe/finalizaInforme/{idtipoinforme}', [InformeController::class, 'finalizaInforme']);
     Route::apiResource('informe', InformeController::class);
     Route::get('cortes/generarsecuencial/{letra}/{idinforme}', [CorteController::class, 'generarsecuencial']);

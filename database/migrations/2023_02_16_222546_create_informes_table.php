@@ -29,6 +29,7 @@ return new class extends Migration
             $table->date('fechapedido');
             $table->integer('secuencial');
             $table->integer('year');
+            $table->integer('iddiagncie10');
             $table->unsignedBigInteger('idtipoinforme');
             $table->foreign('idtipoinforme')->references('id')->on('tipoinformes');
             $table->unsignedBigInteger('idestadopedido');

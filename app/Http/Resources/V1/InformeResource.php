@@ -25,6 +25,7 @@ class InformeResource extends JsonResource
             'fechapedido' => $this->fechapedido,
             'secuencial' => $this->secuencial,
             'year' => $this->year,
+            'iddiagncie10' => $this->iddiagncie10,
             'idtipoinforme' => $this->idtipoinforme,
             'idestadopedido' => $this->idestadopedido,
             'estadopedido' => Estadopedido::select('siglas, descripcion')->whereId($this->idestadopedido)->first(),
@@ -35,6 +36,8 @@ class InformeResource extends JsonResource
             'fechadocumento' => $this->fechadocumento,
             'dgpresuntivo' => $this->dgpresuntivo,
             'resultmicroscopico' => $this->resultmicroscopico,
+            'iddiagncie10' => $this->iddiagncie10,
+            'DIAGNOSTCIE10' => $this->DIAGNOSTCIE10,
             'muestrasAsociadas' => $this->muestras()->get(),
             'cortes' => $this->cortes()->get()
         ];
