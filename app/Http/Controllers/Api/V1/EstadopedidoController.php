@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreEstadopedidoRequest;
 use App\Http\Requests\V1\UpdateEstadopedidoRequest;
-use App\Http\Requests\V1\UpdateInformeRequest;
 use App\Http\Resources\V1\EstadopedidoCollection;
 use App\Http\Resources\V1\EstadopedidoResource;
 use App\Models\Corte;
@@ -18,7 +17,7 @@ class EstadopedidoController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return EstadopedidoCollection
      */
     public function index()
     {
@@ -40,7 +39,7 @@ class EstadopedidoController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Estadopedido  $estadopedido
-     * @return \Illuminate\Http\Response
+     * @return EstadopedidoResource
      */
     public function show(Estadopedido $estadopedido)
     {
@@ -72,35 +71,23 @@ class EstadopedidoController extends Controller
     /**
      * Search the State of each Pedido from a collection of Pedidos.
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function getPedidosEstados(Request $request)
     {
         $input = $request->all();
-        var_dump($input); exit(); print_r();
-
-        $secuencial = Informe::select('secuencial')
-            ->whereYearAndIdtipoinforme($request['year'], $request['idtipoinforme'] )
-            ->orderBy('id', 'desc')
-            ->first();
-        $numero = 1;
-        if ($secuencial) {
-            $numero = $secuencial->secuencial + 1;
+        $estados = array();
+        foreach ($input as $pedido) {
+            $numeroPedido = $pedido['CD_PRE_MED'];
+            $chequeoEstado = Informe::select('id')
+                ->whereNoPedidoMv($numeroPedido)
+                ->count();
+            if ($chequeoEstado == 0) {
+                $estados[] = '{"pedido": $numeroPedido, "estado": "No procesado", "color": "#FF0000")}';
+            } else {
+                $estados[] = '{"pedido": $numeroPedido, "estado": "Procesado", "color": "#00FF00")}';
+            }
         }
-        $request['codigoinforme']  = strval($numero)."-".$request['year'];
-        $request['secuencial']  = strval($numero);
-        $informe->update($request->all());
-        $informe->muestras()->sync($request['muestrasenviadas']);
-        $informe->cortes()->delete();
-        foreach ($request['cortes'] as $corteItem) {
-            $corte = array(
-                "informe_id" => $corteItem['informe_id'],
-                "codigocorte" => $corteItem['codigocorte'],
-                "letra" => $corteItem['letra'],
-                "consecutivo" => $corteItem['consecutivo'],
-                "descripcion" => $corteItem['descripcion'],
-            );
-            Corte::create($corte);
-        }
+        return $estados;
     }
 }
