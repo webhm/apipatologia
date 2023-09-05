@@ -10,13 +10,14 @@ use App\Http\Resources\V1\EstadopedidoResource;
 use App\Models\Estadopedido;
 use App\Models\Informe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EstadopedidoController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return EstadopedidoCollection
      */
     public function index()
     {
@@ -38,7 +39,7 @@ class EstadopedidoController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Estadopedido  $estadopedido
-     * @return \Illuminate\Http\Response
+     * @return EstadopedidoResource
      */
     public function show(Estadopedido $estadopedido)
     {
@@ -71,71 +72,70 @@ class EstadopedidoController extends Controller
     /**
      * Search the State of each Pedido from a collection of Pedidos.
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getPedidosEstados(Request $request)
     {
-        $data = array(
-            array(
-                "CD_PRE_MED" => "520277",
-                "estado" => "Confirmado",
-                "color" => "#ffaa11"
-            ),
-            array(
-                "CD_PRE_MED" => "519352",
-                "estado" => "Ingresado",
-                "color" => "#ffaa11"
-            ),
-            array(
-                "CD_PRE_MED" => "519066",
-                "estado" => "Parcial",
-                "color" => "#ffaa11"
-            ),
-            array(
-                "CD_PRE_MED" => "518184",
-                "estado" => "Confirmado",
-                "color" => "#ffaa11"
-            ),
-            array(
-                "CD_PRE_MED" => "517288",
-                "estado" => "Ingresado",
-                "color" => "#ffaa11"
-            ),
-            array(
-                "CD_PRE_MED" => "516386",
-                "estado" => "Parcial",
-                "color" => "#ffaa11"
-            )
-        );
-
-
-        // return response()->json($data, 200);
-        // $input = $request->all();
-        //  dd($input); exit();
-
-        $input = $request->all();
-        $estados = array();
-        foreach ($input as $pedido) {
-            $numeroPedido = $pedido['CD_PRE_MED'];
-            $chequeoEstado = Informe::select('id')
-                ->where('NoPedidoMv', $numeroPedido )
+        $pedidos = $request->all();
+        $estados = [];
+        foreach ($pedidos as $pedido) {
+            $noProcesado = Informe::select('id')
+                ->where('NoPedidoMv', $pedido )
                 ->count();
-            if ($chequeoEstado == 0) {
+            if ($noProcesado == 0) {
                 $estados[] = array(
-                    "pedido" => $numeroPedido,
+                    "pedido" => $pedido,
                     "estado" => "Parcial",
                     "color" => "#ffaa11"
                 ) ;
             } else {
-                $estados[] =
-                    array(
-                        "pedido" => $numeroPedido,
-                        "estado" => "Procesado",
-                        "color" => "#ffaa11"
+                $ingresado = DB::table('PATOTOGIA.INFORMES')
+                    ->selectRaw('CASE
+                                 WHEN COUNT(*) > 0 AND COUNT(*) = SUM(CASE WHEN IDESTADOPEDIDO = 1
+                                 THEN 1 ELSE 0 END)
+                                 THEN 1 ELSE 0
+                                 END AS Ingresado')
+                    ->where('NOPEDIDOMV', '=', $pedido)
+                    ->get();
+                if ($ingresado > 0) {
+                    $estados[] = array(
+                        "pedido" => $pedido,
+                        "estado" => "Ingresado",
+                        "color" => "#008000"
                     ) ;
+                } else {
+                    $parcialmenteConfirmado = DB::table('PATOTOGIA.INFORMES')
+                        ->selectRaw('CASE
+                                     WHEN COUNT(*) > 0 THEN 1 ELSE 0
+                                     END AS Parcialmente_Confirmado')
+                        ->where('NOPEDIDOMV', '=', $pedido)
+                        ->where('IDESTADOPEDIDO', '<>', 1)
+                        ->get();
+                    if ($parcialmenteConfirmado > 0) {
+                        $estados[] = array(
+                            "pedido" => $pedido,
+                            "estado" => "Parcialmente Confirmado",
+                            "color" => "#008080"
+                        ) ;
+                    } else {
+                        $confirmado = DB::table('PATOTOGIA.INFORMES')
+                            ->selectRaw('CASE
+                                         WHEN COUNT(*) > 0 AND COUNT(*) = SUM(CASE WHEN IDESTADOPEDIDO > 1 THEN 1 ELSE 0 END)
+                                         THEN 1 ELSE 0
+                                         END AS Confirmado')
+                            ->where('NOPEDIDOMV', '=', $pedido)
+                            ->get();
+                        if ($confirmado > 0) {
+                            $estados[] = array(
+                                "pedido" => $pedido,
+                                "estado" => "Confirmado",
+                                "color" => "#000080"
+                            ) ;
+                        }
+                    }
+                }
             }
         }
         return response()->json($estados, 200);
-        //return $estados;
     }
 }
