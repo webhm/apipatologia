@@ -89,43 +89,45 @@ class EstadopedidoController extends Controller
                     "color" => "#ffaa11"
                 ) ;
             } else {
-                $ingresado = DB::table('PATOTOGIA.INFORMES')
+                $ingresado = DB::table('INFORMES')
                     ->selectRaw('CASE
                                  WHEN COUNT(*) > 0 AND COUNT(*) = SUM(CASE WHEN IDESTADOPEDIDO = 1
                                  THEN 1 ELSE 0 END)
                                  THEN 1 ELSE 0
                                  END AS Ingresado')
-                    ->where('NOPEDIDOMV', '=', $pedido)
+                    ->where('NOPEDIDOMV', '=', strval($pedido))
                     ->get();
-                if ($ingresado > 0) {
+                if ($ingresado[0]->ingresado > 0) {
                     $estados[] = array(
                         "pedido" => $pedido,
                         "estado" => "Ingresado",
                         "color" => "#008000"
                     ) ;
                 } else {
-                    $parcialmenteConfirmado = DB::table('PATOTOGIA.INFORMES')
+                    $parcialmenteConfirmado = DB::table('INFORMES')
                         ->selectRaw('CASE
                                      WHEN COUNT(*) > 0 THEN 1 ELSE 0
                                      END AS Parcialmente_Confirmado')
-                        ->where('NOPEDIDOMV', '=', $pedido)
+                        ->where('NOPEDIDOMV', '=', strval($pedido))
                         ->where('IDESTADOPEDIDO', '<>', 1)
                         ->get();
-                    if ($parcialmenteConfirmado > 0) {
+
+                    if ($parcialmenteConfirmado[0]->Parcialmente_Confirmado > 0) {
                         $estados[] = array(
                             "pedido" => $pedido,
                             "estado" => "Parcialmente Confirmado",
                             "color" => "#008080"
                         ) ;
                     } else {
-                        $confirmado = DB::table('PATOTOGIA.INFORMES')
+                        $confirmado = DB::table('INFORMES')
                             ->selectRaw('CASE
                                          WHEN COUNT(*) > 0 AND COUNT(*) = SUM(CASE WHEN IDESTADOPEDIDO > 1 THEN 1 ELSE 0 END)
                                          THEN 1 ELSE 0
                                          END AS Confirmado')
-                            ->where('NOPEDIDOMV', '=', $pedido)
+                            ->where('NOPEDIDOMV', '=', strval($pedido))
                             ->get();
-                        if ($confirmado > 0) {
+
+                        if ($confirmado[0]->Confirmado > 0) {
                             $estados[] = array(
                                 "pedido" => $pedido,
                                 "estado" => "Confirmado",
