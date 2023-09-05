@@ -21,7 +21,7 @@ class PlantilladiagnosticoController extends Controller
 
         if (isset($query)) {
             if (array_key_exists('usuario', $query)) {
-                $plantillas = Plantilladiagnostico::whereNombreusuario($query['usuario'])->get();
+                $plantillas = Plantilladiagnostico::all();
                 return response()->json([
                     'status' => true,
                     'plantillas' => $plantillas

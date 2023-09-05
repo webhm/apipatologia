@@ -33,6 +33,9 @@ class Informe extends Model
         "resultmicroscopico",
         'fechadocumento',
         'iddiagncie10',
+        'referinforme',
+        'resultado2',
+        'resultado3',
         'DIAGNOSTCIE10'
     ];
     public function estadopedido()

@@ -3,7 +3,7 @@
 namespace App\Http\Resources\V1;
 
 use App\Models\Estadopedido;
-use App\Models\Informe;
+use App\Models\Tipoinforme ;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class InformeResource extends JsonResource
@@ -25,10 +25,10 @@ class InformeResource extends JsonResource
             'fechapedido' => $this->fechapedido,
             'secuencial' => $this->secuencial,
             'year' => $this->year,
-            'iddiagncie10' => $this->iddiagncie10,
-            'idtipoinforme' => $this->idtipoinforme,
+            'tipoinforme' => Tipoinforme::select('descripcion')->whereId($this->idtipoinforme)->first() ,
+            'idtipoinforme' =>  $this->idtipoinforme,
             'idestadopedido' => $this->idestadopedido,
-            'estadopedido' => Estadopedido::select('siglas, descripcion')->whereId($this->idestadopedido)->first(),
+            'estadopedido' => Estadopedido::select('siglas')->whereId($this->idestadopedido)->first(),
             'codigoinforme' => $this->codigoinforme,
             'informacionclinica' => $this->informacionclinica,
             'diagnostico' => $this->diagnostico,
@@ -38,6 +38,9 @@ class InformeResource extends JsonResource
             'resultmicroscopico' => $this->resultmicroscopico,
             'iddiagncie10' => $this->iddiagncie10,
             'DIAGNOSTCIE10' => $this->DIAGNOSTCIE10,
+            'referinforme' => $this->referinforme,
+            'resultado2' => $this->resultado2,
+            'resultado3' => $this->resultado3,
             'muestrasAsociadas' => $this->muestras()->get(),
             'cortes' => $this->cortes()->get()
         ];

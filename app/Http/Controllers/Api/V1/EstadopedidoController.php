@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreEstadopedidoRequest;
 use App\Http\Requests\V1\UpdateEstadopedidoRequest;
+use App\Http\Requests\V1\UpdateInformeRequest;
 use App\Http\Resources\V1\EstadopedidoCollection;
 use App\Http\Resources\V1\EstadopedidoResource;
+use App\Models\Corte;
 use App\Models\Estadopedido;
+use App\Models\Informe;
+use Illuminate\Http\Request;
 
 class EstadopedidoController extends Controller
 {
@@ -64,5 +68,39 @@ class EstadopedidoController extends Controller
     public function destroy(Estadopedido $estadopedido)
     {
         //
+    }
+    /**
+     * Search the State of each Pedido from a collection of Pedidos.
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getPedidosEstados(Request $request)
+    {
+        $input = $request->all();
+        var_dump($input); exit(); print_r();
+
+        $secuencial = Informe::select('secuencial')
+            ->whereYearAndIdtipoinforme($request['year'], $request['idtipoinforme'] )
+            ->orderBy('id', 'desc')
+            ->first();
+        $numero = 1;
+        if ($secuencial) {
+            $numero = $secuencial->secuencial + 1;
+        }
+        $request['codigoinforme']  = strval($numero)."-".$request['year'];
+        $request['secuencial']  = strval($numero);
+        $informe->update($request->all());
+        $informe->muestras()->sync($request['muestrasenviadas']);
+        $informe->cortes()->delete();
+        foreach ($request['cortes'] as $corteItem) {
+            $corte = array(
+                "informe_id" => $corteItem['informe_id'],
+                "codigocorte" => $corteItem['codigocorte'],
+                "letra" => $corteItem['letra'],
+                "consecutivo" => $corteItem['consecutivo'],
+                "descripcion" => $corteItem['descripcion'],
+            );
+            Corte::create($corte);
+        }
     }
 }

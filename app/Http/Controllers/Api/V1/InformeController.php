@@ -120,6 +120,21 @@ class InformeController extends Controller
     }
 
     /**
+     * Obtiene Informes Previos del Paciente.
+     *
+     * @return array
+     */
+    public function getInformesPreviosPaciente($hcpaciente)
+    {
+        return DB::table('INFORMES')
+            ->join('TIPOINFORMES', 'INFORMES.IDTIPOINFORME', '=', 'TIPOINFORMES.ID')
+            ->where('NOHISTORIACLINICAMV', $hcpaciente )
+            ->orderBy('FECHADOCUMENTO', 'desc')
+            ->select('INFORMES.ID', 'CODIGOINFORME', 'TIPOINFORMES.DESCRIPCION', 'FECHADOCUMENTO' , 'NOATENCIONMV')
+            ->get();
+    }
+
+    /**
      * Obtiene tipos Informe.
      *
      * @return array
@@ -138,17 +153,11 @@ class InformeController extends Controller
      */
     public function getdiagnostiCIE()
     {
-//        $result = DB::connection('oracleCID')->table("arcpmd")->first();
-//        print_r($result);
-//        return  DB::connection('oracleCID')->table("arcpmd")->first();
         return  DB::table("CID")->select("CD_CID as id", "DS_CID as DESCRIPCION", "CD_CID as SIGLAS")
             ->where('CD_SGRU_CID', 'LIKE', 'C%')
             ->orWhere('CD_SGRU_CID', 'LIKE' ,'D%')
             ->orderBy('CD_CID')
             ->get();
-              //  ->limit(100)
-
-
     }
 
     /**
@@ -160,7 +169,7 @@ class InformeController extends Controller
     {
         $secuencial = Informe::select('secuencial')
             ->whereYearAndIdtipoinforme($year, $idtipoinforme)
-            ->orderBy('id', 'desc')
+            ->orderBy('secuencial', 'desc')
             ->first();
         $numero = 1;
         if ($secuencial) {
@@ -185,4 +194,5 @@ class InformeController extends Controller
             'informe' => $informeId
         ], 200);
     }
+
 }

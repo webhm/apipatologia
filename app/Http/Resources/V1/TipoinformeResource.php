@@ -16,7 +16,7 @@ class TipoinformeResource extends JsonResource
     {
 //        return parent::toArray($request);
         return [
-            'id' => $this->id,
+            'id' => $this->ID,
             'descripcion' => $this->DESCRIPCION,
             'siglas' => $this->SIGLAS
         ];
