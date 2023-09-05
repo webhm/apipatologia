@@ -85,8 +85,8 @@ class EstadopedidoController extends Controller
             if ($noProcesado == 0) {
                 $estados[] = array(
                     "pedido" => $pedido,
-                    "estado" => "Parcial",
-                    "color" => "#ffaa11"
+                    "estado" => "Ingresado",
+                    "color" => "#FF0000"
                 ) ;
             } else {
                 $ingresado = DB::table('INFORMES')
