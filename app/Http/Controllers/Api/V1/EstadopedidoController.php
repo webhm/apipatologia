@@ -85,7 +85,7 @@ class EstadopedidoController extends Controller
             if ($noProcesado == 0) {
                 $estados[] = array(
                     "pedido" => $pedido,
-                    "estado" => "Ingresado",
+                    "estado" => "No procesado",
                     "color" => "#FF0000"
                 ) ;
             } else {
