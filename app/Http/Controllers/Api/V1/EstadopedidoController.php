@@ -86,7 +86,7 @@ class EstadopedidoController extends Controller
                 $estados[] = array(
                     "pedido" => $pedido,
                     "estado" => "No Procesado",
-                    "color" => "#FF0000"
+                    "color" => "#EA4335"
                 ) ;
             } else {
                 $ingresado = DB::table('INFORMES')
@@ -101,7 +101,7 @@ class EstadopedidoController extends Controller
                     $estados[] = array(
                         "pedido" => $pedido,
                         "estado" => "Ingresado",
-                        "color" => "#008000"
+                        "color" => "#34A853"
                     ) ;
                 } else {
                     $confirmado = DB::table('INFORMES')
@@ -116,7 +116,7 @@ class EstadopedidoController extends Controller
                         $estados[] = array(
                             "pedido" => $pedido,
                             "estado" => "Confirmado",
-                            "color" => "#000080"
+                            "color" => "#FBBC05"
                         ) ;
                     } else {
                         $parcialmenteConfirmado = DB::table('INFORMES')
@@ -131,7 +131,7 @@ class EstadopedidoController extends Controller
                             $estados[] = array(
                                 "pedido" => $pedido,
                                 "estado" => "Parcialmente Confirmado",
-                                "color" => "#008080"
+                                "color" => "#4285F4"
                             ) ;
                         }
                     }
