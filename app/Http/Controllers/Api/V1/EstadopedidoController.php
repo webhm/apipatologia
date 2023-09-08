@@ -85,7 +85,7 @@ class EstadopedidoController extends Controller
             if ($noProcesado == 0) {
                 $estados[] = array(
                     "pedido" => $pedido,
-                    "estado" => "No procesado",
+                    "estado" => "No Procesado",
                     "color" => "#FF0000"
                 ) ;
             } else {
@@ -104,34 +104,34 @@ class EstadopedidoController extends Controller
                         "color" => "#008000"
                     ) ;
                 } else {
-                    $parcialmenteConfirmado = DB::table('INFORMES')
+                    $confirmado = DB::table('INFORMES')
                         ->selectRaw('CASE
-                                     WHEN COUNT(*) > 0 THEN 1 ELSE 0
-                                     END AS Parcialmente_Confirmado')
-                        ->where('NOPEDIDOMV', '=', strval($pedido))
-                        ->where('IDESTADOPEDIDO', '<>', 1)
-                        ->get();
-
-                    if ($parcialmenteConfirmado[0]->Parcialmente_Confirmado > 0) {
-                        $estados[] = array(
-                            "pedido" => $pedido,
-                            "estado" => "Parcialmente Confirmado",
-                            "color" => "#008080"
-                        ) ;
-                    } else {
-                        $confirmado = DB::table('INFORMES')
-                            ->selectRaw('CASE
                                          WHEN COUNT(*) > 0 AND COUNT(*) = SUM(CASE WHEN IDESTADOPEDIDO > 1 THEN 1 ELSE 0 END)
                                          THEN 1 ELSE 0
                                          END AS Confirmado')
+                        ->where('NOPEDIDOMV', '=', strval($pedido))
+                        ->get();
+
+                    if ($confirmado[0]->confirmado > 0) {
+                        $estados[] = array(
+                            "pedido" => $pedido,
+                            "estado" => "Confirmado",
+                            "color" => "#000080"
+                        ) ;
+                    } else {
+                        $parcialmenteConfirmado = DB::table('INFORMES')
+                            ->selectRaw('CASE
+                                     WHEN COUNT(*) > 0 THEN 1 ELSE 0
+                                     END AS Parcialmente_Confirmado')
                             ->where('NOPEDIDOMV', '=', strval($pedido))
+                            ->where('IDESTADOPEDIDO', '<>', 1)
                             ->get();
 
-                        if ($confirmado[0]->Confirmado > 0) {
+                        if ($parcialmenteConfirmado[0]->parcialmente_confirmado > 0) {
                             $estados[] = array(
                                 "pedido" => $pedido,
-                                "estado" => "Confirmado",
-                                "color" => "#000080"
+                                "estado" => "Parcialmente Confirmado",
+                                "color" => "#008080"
                             ) ;
                         }
                     }

@@ -40,7 +40,7 @@ class InformeController extends Controller
     {
         $secuencial = Informe::select('secuencial')
             ->whereYearAndIdtipoinforme($request['year'], $request['idtipoinforme'] )
-            ->orderBy('id', 'desc')
+            ->orderBy('SECUENCIAL', 'desc')
             ->first();
         $numero = 1;
         if ($secuencial) {
@@ -85,7 +85,7 @@ class InformeController extends Controller
     {
         $secuencial = Informe::select('secuencial')
             ->whereYearAndIdtipoinforme($request['year'], $request['idtipoinforme'] )
-            ->orderBy('id', 'desc')
+            ->orderBy('SECUENCIAL', 'desc')
             ->first();
         $numero = 1;
         if ($secuencial) {
@@ -142,7 +142,7 @@ class InformeController extends Controller
     public function getalltipos()
     {
         return  Tipoinforme::select("ID", "DESCRIPCION", "SIGLAS")
-            ->orderBy('ID', 'desc')
+            ->orderBy('ID', 'asc')
             ->get();
     }
 

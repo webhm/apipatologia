@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // api/v1
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function (){
     Route::get('muestras/obtenersecuencial', [MuestraController::class, 'obtenersecuencial']);
+    Route::get('muestras/getInformesAsociados', [MuestraController::class, 'getInformesAsociados']);
     Route::apiResource('muestras', MuestraController::class);
     Route::post('estadopedido/getPedidosEstados', [EstadopedidoController::class, 'getPedidosEstados']);
     Route::apiResource('estadopedidos', EstadopedidoController::class);

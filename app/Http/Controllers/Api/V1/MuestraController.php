@@ -9,6 +9,7 @@ use App\Http\Resources\V1\MuestraCollection;
 use App\Http\Resources\V1\MuestraResource;
 use App\Models\Muestra;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MuestraController extends Controller
 {
@@ -98,4 +99,23 @@ class MuestraController extends Controller
     {
         //
     }
+
+    /**
+     * Listado Informes asociados.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getInformesAsociados(Request $request)
+    {
+        $query = $request->query();
+        if (isset($query)) {
+            if (array_key_exists('muestraid', $query)){
+                return DB::table('INFORME_MUESTRA')
+                    ->where('MUESTRA_ID', $query['muestraid'] )
+                    ->select('count(INFORME_ID) AS numinformes')
+                    ->get();
+            }
+        }
+    }
+
 }
